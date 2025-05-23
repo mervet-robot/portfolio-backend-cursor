@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import yool.ma.portfolioservice.dto.MessageResponse;
+import yool.ma.portfolioservice.dto.auth.DirecteurRequest;
 import yool.ma.portfolioservice.dto.auth.ResponsableRequest;
 import yool.ma.portfolioservice.ennum.Role;
 import yool.ma.portfolioservice.model.Profile;
@@ -23,6 +24,38 @@ public class DirecteurService {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    public ResponseEntity<?> directeurRegister(DirecteurRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken"));
+        }
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use"));
+        }
+
+        // Create new Directeur
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(encoder.encode(request.getPassword()));
+        user.setRole(Role.DIRECTEUR);
+
+        Profile profile = new Profile();
+        profile.setFirstName(request.getFirstName());
+        profile.setLastName(request.getLastName());
+        profile.setEmail(request.getEmail());
+        profile.setPhoneNumber(request.getPhoneNumber());
+        profile.setUser(user);
+        user.setProfile(profile);
+
+        userRepository.save(user);
+        return ResponseEntity.ok(new MessageResponse("Directeur registered successfully!"));
+    }
 
     public ResponseEntity<?> createResponsable(ResponsableRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {

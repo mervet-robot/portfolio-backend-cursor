@@ -4,7 +4,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import yool.ma.portfolioservice.dto.auth.DirecteurRequest;
 import yool.ma.portfolioservice.dto.auth.ResponsableRequest;
 import yool.ma.portfolioservice.model.User;
 import yool.ma.portfolioservice.security.service.DirecteurService;
@@ -18,6 +21,17 @@ public class DirecteurController {
 
     @Autowired
     private DirecteurService directeurService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> directeurRegister(@Valid @RequestBody DirecteurRequest directeurRequest) {
+        return directeurService.directeurRegister(directeurRequest);
+    }
 
     @PostMapping("/responsables")
     public ResponseEntity<?> createResponsable(@Valid @RequestBody ResponsableRequest responsableRequest) {
