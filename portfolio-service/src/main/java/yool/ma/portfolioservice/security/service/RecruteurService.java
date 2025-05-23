@@ -33,6 +33,7 @@ public class RecruteurService {
                     .body(new MessageResponse("Error: Email is already in use"));
         }
 
+        // Create new Directeur
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
@@ -44,12 +45,10 @@ public class RecruteurService {
         profile.setLastName(request.getLastName());
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
-        // Assuming Recruteur does not have a department, or it's handled differently.
-        // profile.setDepartment(request.getDepartment()); 
         profile.setUser(user);
         user.setProfile(profile);
 
         userRepository.save(user);
-        return ResponseEntity.ok(new MessageResponse("Recruteur registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse("RECRUTEUR registered successfully!"));
     }
 } 

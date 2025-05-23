@@ -37,6 +37,7 @@ public class Profile {
     private String diploma;
     private String profilePicture;
     private String department;
+    private String company;
 
     @Column(columnDefinition = "TEXT")
     private String bio;

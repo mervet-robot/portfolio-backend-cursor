@@ -63,6 +63,8 @@ public class WebSecurityConfig {
                         auth.requestMatchers("/api/auth/**").permitAll()
 
                                 .requestMatchers("/api/directeur/**").permitAll()
+                                .requestMatchers("/api/recruteur/**").permitAll()
+
 
 
 
