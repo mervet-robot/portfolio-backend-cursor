@@ -11,6 +11,9 @@ import yool.ma.portfolioservice.model.Profile;
 import yool.ma.portfolioservice.model.User;
 import yool.ma.portfolioservice.repository.UserRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RecruteurService {
 
@@ -45,10 +48,19 @@ public class RecruteurService {
         profile.setLastName(request.getLastName());
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
+        profile.setCompany(request.getCompany());
         profile.setUser(user);
         user.setProfile(profile);
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("RECRUTEUR registered successfully!"));
     }
+
+
+    public List<User> getAllRecruteurs() {
+        return userRepository.findAll().stream()
+                .filter(user -> user.getRole() == Role.RECRUTEUR)
+                .collect(Collectors.toList());
+    }
+
 } 

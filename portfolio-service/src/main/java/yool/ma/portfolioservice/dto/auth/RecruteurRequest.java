@@ -33,5 +33,7 @@ public class RecruteurRequest {
 //    @Size(min = 10, max = 15) // Assuming a standard phone number length
     private String phoneNumber;
 
-
+    @NotBlank
+    @Size(min = 2, max = 50)
+    private String company;
 } 
