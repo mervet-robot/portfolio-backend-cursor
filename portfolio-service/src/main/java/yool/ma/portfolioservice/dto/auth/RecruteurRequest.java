@@ -36,4 +36,8 @@ public class RecruteurRequest {
     @NotBlank
     @Size(min = 2, max = 50)
     private String company;
+
+    private String sexe;
+    private String address;
+    private yool.ma.portfolioservice.ennum.Centre centre;
 } 

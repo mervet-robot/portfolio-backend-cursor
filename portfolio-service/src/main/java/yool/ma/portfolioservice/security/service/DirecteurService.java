@@ -50,6 +50,9 @@ public class DirecteurService {
         profile.setLastName(request.getLastName());
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
+        profile.setSexe(request.getSexe());
+        profile.setAddress(request.getAddress());
+        profile.setCentre(request.getCentre());
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -83,6 +86,9 @@ public class DirecteurService {
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
         profile.setDepartment(request.getDepartment());
+        profile.setSexe(request.getSexe());
+        profile.setAddress(request.getAddress());
+        profile.setCentre(request.getCentre());
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -149,6 +155,9 @@ public class DirecteurService {
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
         profile.setDepartment(request.getDepartment());
+        profile.setSexe(request.getSexe());
+        profile.setAddress(request.getAddress());
+        profile.setCentre(request.getCentre());
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("Responsable updated successfully!"));

@@ -34,4 +34,8 @@ public class ResponsableRequest {
     private String department;
     
     private String phoneNumber;
+    
+    private String sexe;
+    private String address;
+    private yool.ma.portfolioservice.ennum.Centre centre;
 } 

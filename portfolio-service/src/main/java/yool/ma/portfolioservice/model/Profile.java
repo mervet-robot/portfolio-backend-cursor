@@ -2,11 +2,11 @@ package yool.ma.portfolioservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import yool.ma.portfolioservice.ennum.Centre;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,6 +38,12 @@ public class Profile {
     private String profilePicture;
     private String department;
     private String company;
+
+    private String sexe;
+    private String address;
+
+    @Enumerated(EnumType.STRING)
+    private Centre centre;
 
     @Column(columnDefinition = "TEXT")
     private String bio;

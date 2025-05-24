@@ -49,6 +49,9 @@ public class RecruteurService {
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
         profile.setCompany(request.getCompany());
+        profile.setSexe(request.getSexe());
+        profile.setAddress(request.getAddress());
+        profile.setCentre(request.getCentre());
         profile.setUser(user);
         user.setProfile(profile);
 

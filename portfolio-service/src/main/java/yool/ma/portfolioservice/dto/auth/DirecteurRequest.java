@@ -31,6 +31,10 @@ public class DirecteurRequest {
 //    @Size(min = 10, max = 15) // Assuming a standard phone number length
     private String phoneNumber;
 
+    private String sexe;
+    private String address;
+    private yool.ma.portfolioservice.ennum.Centre centre;
+
     // Getters and Setters
 
     public String getUsername() {
@@ -79,5 +83,29 @@ public class DirecteurRequest {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getSexe() {
+        return sexe;
+    }
+
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public yool.ma.portfolioservice.ennum.Centre getCentre() {
+        return centre;
+    }
+
+    public void setCentre(yool.ma.portfolioservice.ennum.Centre centre) {
+        this.centre = centre;
     }
 } 

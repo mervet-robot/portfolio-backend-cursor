@@ -14,6 +14,7 @@ import yool.ma.portfolioservice.dto.auth.JwtResponse;
 import yool.ma.portfolioservice.dto.auth.LoginRequest;
 import yool.ma.portfolioservice.dto.auth.RegisterRequest;
 import yool.ma.portfolioservice.ennum.Role;
+import yool.ma.portfolioservice.ennum.Centre;
 import yool.ma.portfolioservice.model.Profile;
 import yool.ma.portfolioservice.model.User;
 import yool.ma.portfolioservice.repository.UserRepository;
@@ -82,6 +83,9 @@ public class AuthService {
         profile.setFirstName(registerRequest.getFirstName());
         profile.setLastName(registerRequest.getLastName());
         profile.setEmail(registerRequest.getEmail());
+        profile.setSexe(registerRequest.getSexe());
+        profile.setAddress(registerRequest.getAddress());
+        profile.setCentre(Centre.CASA_CENTRE);
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -128,8 +132,9 @@ public class AuthService {
             // Update profile details
             user.getProfile().setFirstName(registerRequest.getFirstName());
             user.getProfile().setLastName(registerRequest.getLastName());
-            // Email is tied to the user, profile email should ideally match
-            // user.getProfile().setEmail(registerRequest.getEmail());
+            user.getProfile().setSexe(registerRequest.getSexe());
+            user.getProfile().setAddress(registerRequest.getAddress());
+            user.getProfile().setCentre(Centre.CASA_CENTRE);
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("USER successfully upgraded/registered as APPRENANT!"));
         } else if (user.getRole() == Role.APPRENANT) {
@@ -137,6 +142,9 @@ public class AuthService {
             // Update profile details
             user.getProfile().setFirstName(registerRequest.getFirstName());
             user.getProfile().setLastName(registerRequest.getLastName());
+            user.getProfile().setSexe(registerRequest.getSexe());
+            user.getProfile().setAddress(registerRequest.getAddress());
+            user.getProfile().setCentre(Centre.CASA_CENTRE);
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("APPRENANT successfully upgraded/registered as LAUREAT!"));
         } else if (user.getRole() == Role.LAUREAT) {
