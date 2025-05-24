@@ -83,6 +83,7 @@ public class AuthService {
         profile.setFirstName(registerRequest.getFirstName());
         profile.setLastName(registerRequest.getLastName());
         profile.setEmail(registerRequest.getEmail());
+        profile.setPhoneNumber(registerRequest.getPhoneNumber());
         profile.setSexe(registerRequest.getSexe());
         profile.setAddress(registerRequest.getAddress());
         profile.setCentre(Centre.CASA_CENTRE);
@@ -132,6 +133,7 @@ public class AuthService {
             // Update profile details
             user.getProfile().setFirstName(registerRequest.getFirstName());
             user.getProfile().setLastName(registerRequest.getLastName());
+            user.getProfile().setPhoneNumber(registerRequest.getPhoneNumber());
             user.getProfile().setSexe(registerRequest.getSexe());
             user.getProfile().setAddress(registerRequest.getAddress());
             user.getProfile().setCentre(Centre.CASA_CENTRE);
@@ -142,6 +144,7 @@ public class AuthService {
             // Update profile details
             user.getProfile().setFirstName(registerRequest.getFirstName());
             user.getProfile().setLastName(registerRequest.getLastName());
+            user.getProfile().setPhoneNumber(registerRequest.getPhoneNumber());
             user.getProfile().setSexe(registerRequest.getSexe());
             user.getProfile().setAddress(registerRequest.getAddress());
             user.getProfile().setCentre(Centre.CASA_CENTRE);

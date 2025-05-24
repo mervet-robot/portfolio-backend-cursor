@@ -30,4 +30,8 @@ public class RegisterRequest {
 
     private String firstName;
     private String lastName;
+
+    //    @NotBlank
+//    @Size(min = 10, max = 15) // Assuming a standard phone number length
+    private String phoneNumber;
 }
