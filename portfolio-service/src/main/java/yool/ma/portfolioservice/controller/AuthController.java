@@ -1,4 +1,3 @@
-
 package yool.ma.portfolioservice.controller;
 
 import jakarta.validation.Valid;
@@ -27,5 +26,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         return authService.registerUser(registerRequest);
+    }
+
+    @PostMapping("/register-professional")
+    public ResponseEntity<?> registerApprenantLaureat(@Valid @RequestBody RegisterRequest registerRequest) {
+        return authService.registerApprenantLaureat(registerRequest);
     }
 }

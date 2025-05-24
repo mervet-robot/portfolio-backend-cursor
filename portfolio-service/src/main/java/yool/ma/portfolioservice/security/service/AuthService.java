@@ -1,4 +1,3 @@
-
 package yool.ma.portfolioservice.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,44 +58,6 @@ public class AuthService {
     }
 
     public ResponseEntity<?> registerUser(RegisterRequest registerRequest) {
-        // First check if user exists with same username OR email (not AND)
-        Optional<User> existingUser = userRepository.findByUsernameAndEmail(
-                registerRequest.getUsername(),
-                registerRequest.getEmail()
-        );
-
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-
-            // Verify if the provided credentials match the existing user
-            if (!user.getEmail().equals(registerRequest.getEmail())) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: Username or email already in use"));
-            }
-
-            // Progressive role assignment logic
-            if (user.getRole() == Role.USER) {
-                // Upgrade USER to APPRENANT
-                user.setPassword(encoder.encode(registerRequest.getPassword()));
-                user.setRole(Role.APPRENANT);
-                userRepository.save(user);
-                return ResponseEntity.ok(new MessageResponse("USER upgraded to APPRENANT successfully!"));
-            }
-            else if (user.getRole() == Role.APPRENANT) {
-                // Upgrade APPRENANT to LAUREAT
-                user.setPassword(encoder.encode(registerRequest.getPassword()));
-                user.setRole(Role.LAUREAT);
-                userRepository.save(user);
-                return ResponseEntity.ok(new MessageResponse("APPRENANT upgraded to LAUREAT successfully!"));
-            }
-            else if (user.getRole() == Role.LAUREAT) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: Already registered as LAUREAT"));
-            }
-        }
-
         // Standard checks for new registration
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity
@@ -115,7 +76,7 @@ public class AuthService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(encoder.encode(registerRequest.getPassword()));
-        user.setRole(Role.USER); // Changed from APPRENANT to USER
+        user.setRole(Role.USER); // New users are always USER
 
         Profile profile = new Profile();
         profile.setFirstName(registerRequest.getFirstName());
@@ -128,6 +89,67 @@ public class AuthService {
         return ResponseEntity.ok(new MessageResponse("User registered successfully as USER!"));
     }
 
+    public ResponseEntity<?> registerApprenantLaureat(RegisterRequest registerRequest) {
+        Optional<User> existingUserOptional = userRepository.findByUsernameAndEmail(
+                registerRequest.getUsername(),
+                registerRequest.getEmail()
+        );
+
+        if (!existingUserOptional.isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: User not found with the provided username and email. Please register as a basic user first or check credentials."));
+        }
+
+        User user = existingUserOptional.get();
+
+        // Ensure the request's email also matches, as findByUsernameAndEmail checks both.
+        // This is more of a sanity check here given the repository method.
+        if (!user.getEmail().equals(registerRequest.getEmail())) {
+            // This case should ideally not be hit if findByUsernameAndEmail worked as expected
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Credentials mismatch."));
+        }
+
+        // Update password if a new one is provided.
+        // Consider if password matching the old one should be enforced or if this implies a password reset/update.
+        // For now, we'll update it like in the original logic.
+        if (registerRequest.getPassword() != null && !registerRequest.getPassword().isEmpty()) {
+            if (!encoder.matches(registerRequest.getPassword(), user.getPassword())) {
+                 user.setPassword(encoder.encode(registerRequest.getPassword()));
+            }
+        }
+
+
+        // Progressive role assignment logic
+        if (user.getRole() == Role.USER) {
+            user.setRole(Role.APPRENANT);
+            // Update profile details
+            user.getProfile().setFirstName(registerRequest.getFirstName());
+            user.getProfile().setLastName(registerRequest.getLastName());
+            // Email is tied to the user, profile email should ideally match
+            // user.getProfile().setEmail(registerRequest.getEmail());
+            userRepository.save(user);
+            return ResponseEntity.ok(new MessageResponse("USER successfully upgraded/registered as APPRENANT!"));
+        } else if (user.getRole() == Role.APPRENANT) {
+            user.setRole(Role.LAUREAT);
+            // Update profile details
+            user.getProfile().setFirstName(registerRequest.getFirstName());
+            user.getProfile().setLastName(registerRequest.getLastName());
+            userRepository.save(user);
+            return ResponseEntity.ok(new MessageResponse("APPRENANT successfully upgraded/registered as LAUREAT!"));
+        } else if (user.getRole() == Role.LAUREAT) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: User is already registered as LAUREAT. No further upgrades possible."));
+        } else {
+            // Handle cases like ADMIN or other roles if they exist and this flow is accessed
+             return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: User has an unsupported role for this operation (" + user.getRole().name() + ")."));
+        }
+    }
 
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
