@@ -10,11 +10,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import yool.ma.portfolioservice.dto.PortfolioSummaryDto;
 import yool.ma.portfolioservice.dto.ProfileUpdateRequest;
 import yool.ma.portfolioservice.dto.SocialLinkRequestDTO;
 import yool.ma.portfolioservice.dto.SocialLinkResponseDTO;
 import yool.ma.portfolioservice.model.Profile;
 import yool.ma.portfolioservice.security.service.ProfileService;
+import yool.ma.portfolioservice.service.LlmService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,11 +33,13 @@ import java.util.UUID;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final LlmService llmService;
     private static final String UPLOAD_DIR = "uploads/profile-pictures/";
 
     @Autowired
-    public ProfileController(ProfileService profileService) {
+    public ProfileController(ProfileService profileService, LlmService llmService) {
         this.profileService = profileService;
+        this.llmService = llmService;
     }
 
     @GetMapping("/{userId}")
@@ -155,6 +159,19 @@ public class ProfileController {
 //        return ResponseEntity.ok((String) response.getBody().get("response"));
     }
 
-
+    @PostMapping("/{userId}/generate-bio")
+    public ResponseEntity<String> generateBio(
+            @PathVariable Long userId,
+            @RequestBody PortfolioSummaryDto portfolioSummaryDto) {
+        try {
+            String generatedBio = llmService.generateBioFromPortfolioData(portfolioSummaryDto);
+            if ("COULD NOT GENERATE BIO".equals(generatedBio)) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to generate bio.");
+            }
+            return ResponseEntity.ok(generatedBio);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating bio: " + e.getMessage());
+        }
+    }
 
 }
