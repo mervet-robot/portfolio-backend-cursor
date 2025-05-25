@@ -3,6 +3,7 @@ package yool.ma.portfolioservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import yool.ma.portfolioservice.dto.ProfileUpdateRequest;
+import yool.ma.portfolioservice.dto.SocialLinkRequestDTO;
+import yool.ma.portfolioservice.dto.SocialLinkResponseDTO;
 import yool.ma.portfolioservice.model.Profile;
 import yool.ma.portfolioservice.security.service.ProfileService;
 
@@ -18,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -76,6 +80,39 @@ public class ProfileController {
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload profile picture", e);
         }
+    }
+
+    // --- SocialLink Endpoints ---
+
+    @GetMapping("/{userId}/social-links")
+    public ResponseEntity<List<SocialLinkResponseDTO>> getSocialLinks(@PathVariable Long userId) {
+        List<SocialLinkResponseDTO> socialLinks = profileService.getSocialLinks(userId);
+        return ResponseEntity.ok(socialLinks);
+    }
+
+    @PostMapping("/{userId}/social-links")
+    public ResponseEntity<SocialLinkResponseDTO> addSocialLink(
+            @PathVariable Long userId,
+            @RequestBody SocialLinkRequestDTO socialLinkDto) {
+        SocialLinkResponseDTO newSocialLink = profileService.addSocialLink(userId, socialLinkDto);
+        return new ResponseEntity<>(newSocialLink, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{userId}/social-links/{socialLinkId}")
+    public ResponseEntity<SocialLinkResponseDTO> updateSocialLink(
+            @PathVariable Long userId,
+            @PathVariable Long socialLinkId,
+            @RequestBody SocialLinkRequestDTO socialLinkDto) {
+        SocialLinkResponseDTO updatedSocialLink = profileService.updateSocialLink(userId, socialLinkId, socialLinkDto);
+        return ResponseEntity.ok(updatedSocialLink);
+    }
+
+    @DeleteMapping("/{userId}/social-links/{socialLinkId}")
+    public ResponseEntity<Void> deleteSocialLink(
+            @PathVariable Long userId,
+            @PathVariable Long socialLinkId) {
+        profileService.deleteSocialLink(userId, socialLinkId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/bio-check")

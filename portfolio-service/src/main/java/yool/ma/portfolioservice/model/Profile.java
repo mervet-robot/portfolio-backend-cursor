@@ -48,10 +48,9 @@ public class Profile {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @ElementCollection
-    @CollectionTable(name = "profile_social_links", joinColumns = @JoinColumn(name = "profile_id"))
-    @Column(name = "link")
-    private Set<String> socialLinks = new HashSet<>();
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<SocialLink> socialLinks = new HashSet<>();
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
