@@ -7,7 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import yool.ma.portfolioservice.dto.PortfolioSummaryDto;
+import yool.ma.portfolioservice.dto.ExperienceDetailDto;
+import yool.ma.portfolioservice.dto.FormationDetailDto;
+import yool.ma.portfolioservice.dto.CertificationDetailDto;
+import yool.ma.portfolioservice.dto.ProjectDetailDto;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -22,33 +27,80 @@ public class LlmService {
     }
 
     public String generateBioFromPortfolioData(PortfolioSummaryDto summaryDto) {
-        StringBuilder promptBuilder = new StringBuilder("Based on the following data, generate a concise and professional bio between 20 and 50 words. Return only the generated bio text:\n");
+        StringBuilder promptBuilder = new StringBuilder("Based on the following comprehensive portfolio data, generate a concise and professional bio between 20 and 50 words for this person. The bio should highlight key aspects of their profile. Return only the generated bio text, with no introductory phrases like \"Here is a bio:\".\n\nPortfolio Data:\n");
 
+        // Profile Info
+        if (summaryDto.getFirstName() != null && !summaryDto.getFirstName().isEmpty()) {
+            promptBuilder.append("- Name: ").append(summaryDto.getFirstName());
+            if (summaryDto.getLastName() != null && !summaryDto.getLastName().isEmpty()) {
+                promptBuilder.append(" ").append(summaryDto.getLastName());
+            }
+            promptBuilder.append("\n");
+        }
         if (summaryDto.getDiploma() != null && !summaryDto.getDiploma().isEmpty()) {
-            promptBuilder.append("- Profession/Current Role: ").append(summaryDto.getDiploma()).append("\n");
+            promptBuilder.append("- Headline/Current Profession: ").append(summaryDto.getDiploma()).append("\n");
         }
-        if (summaryDto.getExperienceTitle() != null && !summaryDto.getExperienceTitle().isEmpty()) {
-            promptBuilder.append("- Most Recent Job Title: ").append(summaryDto.getExperienceTitle());
-            if (summaryDto.getExperienceCompany() != null && !summaryDto.getExperienceCompany().isEmpty()) {
-                promptBuilder.append(" at ").append(summaryDto.getExperienceCompany());
+
+        // Experiences
+        if (summaryDto.getExperiences() != null && !summaryDto.getExperiences().isEmpty()) {
+            promptBuilder.append("\nExperiences:\n");
+            for (ExperienceDetailDto exp : summaryDto.getExperiences()) {
+                promptBuilder.append("  - Title: ").append(exp.getTitle());
+                if (exp.getCompany() != null && !exp.getCompany().isEmpty()) {
+                    promptBuilder.append(", Company: ").append(exp.getCompany());
+                }
+                promptBuilder.append("\n");
+            }
+        }
+
+        // Latest Formation
+        FormationDetailDto latestFormation = summaryDto.getLatestFormation();
+        if (latestFormation != null) {
+            promptBuilder.append("\nLatest Education:\n");
+            promptBuilder.append("  - Degree: ").append(latestFormation.getDegree());
+            if (latestFormation.getInstitution() != null && !latestFormation.getInstitution().isEmpty()) {
+                promptBuilder.append(", Institution: ").append(latestFormation.getInstitution());
+            }
+            if (latestFormation.getFieldOfStudy() != null && !latestFormation.getFieldOfStudy().isEmpty()) {
+                promptBuilder.append(", Field of Study: ").append(latestFormation.getFieldOfStudy());
             }
             promptBuilder.append("\n");
         }
-        if (summaryDto.getSkills() != null && !summaryDto.getSkills().isEmpty()) {
-            promptBuilder.append("- Key Skills: ").append(String.join(", ", summaryDto.getSkills())).append("\n");
+
+        // Technical Skills
+        if (summaryDto.getTechSkills() != null && !summaryDto.getTechSkills().isEmpty()) {
+            promptBuilder.append("\nTechnical Skills: ").append(String.join(", ", summaryDto.getTechSkills())).append("\n");
         }
-        if (summaryDto.getDegree() != null && !summaryDto.getDegree().isEmpty()) {
-            promptBuilder.append("- Education: ").append(summaryDto.getDegree());
-            if (summaryDto.getFieldOfStudy() != null && !summaryDto.getFieldOfStudy().isEmpty()) {
-                promptBuilder.append(" in ").append(summaryDto.getFieldOfStudy());
+
+        // Certifications
+        if (summaryDto.getCertifications() != null && !summaryDto.getCertifications().isEmpty()) {
+            promptBuilder.append("\nCertifications:\n");
+            for (CertificationDetailDto cert : summaryDto.getCertifications()) {
+                promptBuilder.append("  - Name: ").append(cert.getName());
+                if (cert.getIssuingOrganization() != null && !cert.getIssuingOrganization().isEmpty()) {
+                    promptBuilder.append(", Issued by: ").append(cert.getIssuingOrganization());
+                }
+                promptBuilder.append("\n");
             }
-            promptBuilder.append("\n");
+        }
+
+        // Projects
+        if (summaryDto.getProjects() != null && !summaryDto.getProjects().isEmpty()) {
+            promptBuilder.append("\nProjects:\n");
+            for (ProjectDetailDto proj : summaryDto.getProjects()) {
+                promptBuilder.append("  - Title: ").append(proj.getTitle());
+                if (proj.getDescription() != null && !proj.getDescription().isEmpty()) {
+                    promptBuilder.append(" (Description: ").append(proj.getDescription().substring(0, Math.min(proj.getDescription().length(), 50))).append("...)"); // Truncate long descriptions
+                }
+                promptBuilder.append("\n");
+            }
         }
         
-        promptBuilder.append("\nGenerated Bio:");
-
+        promptBuilder.append("\nBased on all the above, generate the bio.");
+        promptBuilder.append("\nGenerated Bio (20-50 words):"); // Reiterating the desired output format for the LLM
 
         String prompt = promptBuilder.toString();
+        System.out.println("DEBUG: LLM Prompt:\n" + prompt); // For debugging the prompt
 
         Map<String, Object> body = Map.of(
                 "model", "tinyllama", // Or your preferred model
@@ -64,13 +116,18 @@ public class LlmService {
             ResponseEntity<Map> response = restTemplate.postForEntity(llmApiUrl, entity, Map.class);
             if (response.getBody() != null && response.getBody().get("response") != null) {
                 String responseText = ((String) response.getBody().get("response")).trim();
+                
                 // Clean up potential leading/trailing quotes from LLM response
                 if (responseText.startsWith("\"") && responseText.endsWith("\"") && responseText.length() > 1) {
                     responseText = responseText.substring(1, responseText.length() - 1);
                 }
-                 // Remove any "Generated Bio:" prefix if the LLM includes it despite instructions
-                if (responseText.toLowerCase().startsWith("generated bio:")) {
-                    responseText = responseText.substring("generated bio:".length()).trim();
+                // Remove any "Generated Bio:" or similar prefix if the LLM includes it despite instructions
+                String[] prefixesToRemove = {"generated bio:", "bio:", "here is a bio:", "here's a bio:"};
+                for (String prefix : prefixesToRemove) {
+                    if (responseText.toLowerCase().startsWith(prefix)) {
+                        responseText = responseText.substring(prefix.length()).trim();
+                        break;
+                    }
                 }
                 return responseText;
             } else {
@@ -79,7 +136,7 @@ public class LlmService {
             }
         } catch (Exception e) {
             System.err.println("Error calling LLM service: " + e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(); // Consider using a proper logger
             return "COULD NOT GENERATE BIO";
         }
     }

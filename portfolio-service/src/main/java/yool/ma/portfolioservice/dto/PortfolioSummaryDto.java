@@ -4,27 +4,53 @@ import java.util.List;
 
 public class PortfolioSummaryDto {
 
-    private String diploma;
-    private String experienceTitle;
-    private String experienceCompany;
-    private List<String> skills;
-    private String degree;
-    private String fieldOfStudy;
+    // Profile fields
+    private String firstName;
+    private String lastName;
+    private String diploma; // This is from profile, like a headline or current profession
+
+    // Collections of details
+    private List<ExperienceDetailDto> experiences;
+    private FormationDetailDto latestFormation; // Only the latest formation
+    private List<String> techSkills; // List of skill names
+    private List<CertificationDetailDto> certifications;
+    private List<ProjectDetailDto> projects;
 
     // Constructors
     public PortfolioSummaryDto() {
     }
 
-    public PortfolioSummaryDto(String diploma, String experienceTitle, String experienceCompany, List<String> skills, String degree, String fieldOfStudy) {
+    public PortfolioSummaryDto(String firstName, String lastName, String diploma,
+                               List<ExperienceDetailDto> experiences, FormationDetailDto latestFormation,
+                               List<String> techSkills, List<CertificationDetailDto> certifications,
+                               List<ProjectDetailDto> projects) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.diploma = diploma;
-        this.experienceTitle = experienceTitle;
-        this.experienceCompany = experienceCompany;
-        this.skills = skills;
-        this.degree = degree;
-        this.fieldOfStudy = fieldOfStudy;
+        this.experiences = experiences;
+        this.latestFormation = latestFormation;
+        this.techSkills = techSkills;
+        this.certifications = certifications;
+        this.projects = projects;
     }
 
     // Getters and Setters
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getDiploma() {
         return diploma;
     }
@@ -33,56 +59,58 @@ public class PortfolioSummaryDto {
         this.diploma = diploma;
     }
 
-    public String getExperienceTitle() {
-        return experienceTitle;
+    public List<ExperienceDetailDto> getExperiences() {
+        return experiences;
     }
 
-    public void setExperienceTitle(String experienceTitle) {
-        this.experienceTitle = experienceTitle;
+    public void setExperiences(List<ExperienceDetailDto> experiences) {
+        this.experiences = experiences;
     }
 
-    public String getExperienceCompany() {
-        return experienceCompany;
+    public FormationDetailDto getLatestFormation() {
+        return latestFormation;
     }
 
-    public void setExperienceCompany(String experienceCompany) {
-        this.experienceCompany = experienceCompany;
+    public void setLatestFormation(FormationDetailDto latestFormation) {
+        this.latestFormation = latestFormation;
     }
 
-    public List<String> getSkills() {
-        return skills;
+    public List<String> getTechSkills() {
+        return techSkills;
     }
 
-    public void setSkills(List<String> skills) {
-        this.skills = skills;
+    public void setTechSkills(List<String> techSkills) {
+        this.techSkills = techSkills;
     }
 
-    public String getDegree() {
-        return degree;
+    public List<CertificationDetailDto> getCertifications() {
+        return certifications;
     }
 
-    public void setDegree(String degree) {
-        this.degree = degree;
+    public void setCertifications(List<CertificationDetailDto> certifications) {
+        this.certifications = certifications;
     }
 
-    public String getFieldOfStudy() {
-        return fieldOfStudy;
+    public List<ProjectDetailDto> getProjects() {
+        return projects;
     }
 
-    public void setFieldOfStudy(String fieldOfStudy) {
-        this.fieldOfStudy = fieldOfStudy;
+    public void setProjects(List<ProjectDetailDto> projects) {
+        this.projects = projects;
     }
 
     // toString() method (optional, for debugging)
     @Override
     public String toString() {
         return "PortfolioSummaryDto{" +
-                "diploma='" + diploma + '\'' +
-                ", experienceTitle='" + experienceTitle + '\'' +
-                ", experienceCompany='" + experienceCompany + '\'' +
-                ", skills=" + skills +
-                ", degree='" + degree + '\'' +
-                ", fieldOfStudy='" + fieldOfStudy + '\'' +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", diploma='" + diploma + '\'' +
+                ", experiences=" + experiences +
+                ", latestFormation=" + latestFormation +
+                ", techSkills=" + techSkills +
+                ", certifications=" + certifications +
+                ", projects=" + projects +
                 '}';
     }
 } 
