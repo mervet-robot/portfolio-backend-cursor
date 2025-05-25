@@ -86,7 +86,7 @@ public class AuthService {
         profile.setPhoneNumber(registerRequest.getPhoneNumber());
         profile.setSexe(registerRequest.getSexe());
         profile.setAddress(registerRequest.getAddress());
-        profile.setCentre(Centre.CASA_CENTRE);
+        profile.setCentre(registerRequest.getCentre());
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -136,7 +136,7 @@ public class AuthService {
             user.getProfile().setPhoneNumber(registerRequest.getPhoneNumber());
             user.getProfile().setSexe(registerRequest.getSexe());
             user.getProfile().setAddress(registerRequest.getAddress());
-            user.getProfile().setCentre(Centre.CASA_CENTRE);
+            user.getProfile().setCentre(registerRequest.getCentre());
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("USER successfully upgraded/registered as APPRENANT!"));
         } else if (user.getRole() == Role.APPRENANT) {
@@ -144,10 +144,9 @@ public class AuthService {
             // Update profile details
             user.getProfile().setFirstName(registerRequest.getFirstName());
             user.getProfile().setLastName(registerRequest.getLastName());
-            user.getProfile().setPhoneNumber(registerRequest.getPhoneNumber());
             user.getProfile().setSexe(registerRequest.getSexe());
             user.getProfile().setAddress(registerRequest.getAddress());
-            user.getProfile().setCentre(Centre.CASA_CENTRE);
+            user.getProfile().setCentre(registerRequest.getCentre());
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("APPRENANT successfully upgraded/registered as LAUREAT!"));
         } else if (user.getRole() == Role.LAUREAT) {

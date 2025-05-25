@@ -63,6 +63,12 @@ public class ProfileService {
         if (profileUpdateRequest.getSocialLinks() != null) {
             profile.setSocialLinks(new HashSet<>(profileUpdateRequest.getSocialLinks()));
         }
+        if (profileUpdateRequest.getAddress() != null) {
+            profile.setAddress(profileUpdateRequest.getAddress());
+        }
+        if (profileUpdateRequest.getCentre() != null) {
+            profile.setCentre(profileUpdateRequest.getCentre());
+        }
 
         return profileRepository.save(profile);
     }
