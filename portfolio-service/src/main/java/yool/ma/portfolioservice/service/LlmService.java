@@ -95,7 +95,7 @@ public class LlmService {
                 promptBuilder.append("\n");
             }
         }
-        
+
         promptBuilder.append("\nBased on all the above, generate the bio.");
         promptBuilder.append("\nGenerated Bio (20-50 words):"); // Reiterating the desired output format for the LLM
 
@@ -116,7 +116,7 @@ public class LlmService {
             ResponseEntity<Map> response = restTemplate.postForEntity(llmApiUrl, entity, Map.class);
             if (response.getBody() != null && response.getBody().get("response") != null) {
                 String responseText = ((String) response.getBody().get("response")).trim();
-                
+
                 // Clean up potential leading/trailing quotes from LLM response
                 if (responseText.startsWith("\"") && responseText.endsWith("\"") && responseText.length() > 1) {
                     responseText = responseText.substring(1, responseText.length() - 1);
@@ -140,4 +140,4 @@ public class LlmService {
             return "COULD NOT GENERATE BIO";
         }
     }
-} 
+}

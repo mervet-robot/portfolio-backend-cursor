@@ -1,7 +1,10 @@
 package yool.ma.portfolioservice.dto;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class PortfolioSummaryDto {
 
     // Profile fields
@@ -34,70 +37,6 @@ public class PortfolioSummaryDto {
         this.projects = projects;
     }
 
-    // Getters and Setters
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDiploma() {
-        return diploma;
-    }
-
-    public void setDiploma(String diploma) {
-        this.diploma = diploma;
-    }
-
-    public List<ExperienceDetailDto> getExperiences() {
-        return experiences;
-    }
-
-    public void setExperiences(List<ExperienceDetailDto> experiences) {
-        this.experiences = experiences;
-    }
-
-    public FormationDetailDto getLatestFormation() {
-        return latestFormation;
-    }
-
-    public void setLatestFormation(FormationDetailDto latestFormation) {
-        this.latestFormation = latestFormation;
-    }
-
-    public List<String> getTechSkills() {
-        return techSkills;
-    }
-
-    public void setTechSkills(List<String> techSkills) {
-        this.techSkills = techSkills;
-    }
-
-    public List<CertificationDetailDto> getCertifications() {
-        return certifications;
-    }
-
-    public void setCertifications(List<CertificationDetailDto> certifications) {
-        this.certifications = certifications;
-    }
-
-    public List<ProjectDetailDto> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<ProjectDetailDto> projects) {
-        this.projects = projects;
-    }
 
     // toString() method (optional, for debugging)
     @Override

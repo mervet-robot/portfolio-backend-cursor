@@ -74,6 +74,11 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/profiles/bio-check").permitAll()
 
 
+                                .requestMatchers("/api/resp-project-media/**").permitAll()
+                                .requestMatchers("/api/resp-projects/**").permitAll()
+                                .requestMatchers("/api/resp-feedback/**").permitAll()
+
+
                                 .requestMatchers("/api/certifications/**").permitAll()
                                 .requestMatchers("/api/certifications/profile/**").permitAll()
                                 .requestMatchers("/api/projects/**").permitAll()

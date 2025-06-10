@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${portfolio.profile.firstName + ' ' + portfolio.profile.lastName + ' - Portfolio'}">Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .cv-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .cv-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .cv-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .cv-header .title {
+            font-size: 18px;
+            color: #555;
+            margin-top: 5px;
+        }
+        .contact-info span {
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 20px;
+            color: #444;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .item {
+            margin-bottom: 15px;
+        }
+        .item h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+        .item .company, .item .institution {
+            font-style: italic;
+            color: #666;
+        }
+        .item .dates {
+            font-size: 0.9em;
+            color: #777;
+        }
+        .item .description, .item .field {
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+        .skills-list li, .languages-list li {
+            list-style-type: none;
+            margin-bottom: 5px;
+        }
+        .skills-list ul, .languages-list ul {
+            padding-left: 0;
+        }
+        .profile-bio {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="cv-container" th:if="${portfolio}">
+    <!-- Header Section -->
+    <header class="cv-header">
+        <h1 th:text="${portfolio.profile.firstName + ' ' + portfolio.profile.lastName}">Full Name</h1>
+        <p class="title" th:text="${portfolio.profile.diploma}">Your Profession</p>
+        <div class="contact-info">
+            <span th:if="${portfolio.profile.email}" th:text="${portfolio.profile.email}">email@example.com</span>
+            <span th:if="${portfolio.profile.phoneNumber}" th:text="${portfolio.profile.phoneNumber}">123-456-7890</span>
+            <span th:if="${portfolio.profile.address}" th:text="${portfolio.profile.address}">Your Address</span>
+        </div>
+    </header>
+
+    <!-- Profile Bio Section -->
+    <section class="section profile-section">
+        <h2 class="section-title">Profile</h2>
+        <p class="profile-bio" th:text="${portfolio.profile.bio}">Bio goes here...</p>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section" th:if="${portfolio.experiences != null and !portfolio.experiences.isEmpty()}">
+        <h2 class="section-title">Experience</h2>
+        <div th:each="exp : ${portfolio.experiences}" class="item">
+            <h3 th:text="${exp.title}">Job Title</h3>
+            <p class="company" th:text="${exp.company}">Company Name</p>
+            <p class="dates">
+                <span th:if="${exp.startDate != null}" th:text="${#dates.format(exp.startDate, 'MMM yyyy')}"></span>
+                <span th:unless="${exp.startDate != null}"></span>
+                <span> - </span>
+                <span th:if="${exp.current}">Present</span>
+                <span th:unless="${exp.current}">
+                    <span th:if="${exp.endDate != null}" th:text="${#dates.format(exp.endDate, 'MMM yyyy')}"></span>
+                    <span th:unless="${exp.endDate != null}"></span>
+                </span>
+                <span th:if="${exp.location}" th:text="' • ' + exp.location">Location</span>
+            </p>
+            <p class="description" th:if="${exp.description}" th:text="${exp.description}">Description...</p>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="section" th:if="${portfolio.formations != null and !portfolio.formations.isEmpty()}">
+        <h2 class="section-title">Education</h2>
+        <div th:each="form : ${portfolio.formations}" class="item">
+            <h3 th:text="${form.degree}">Degree</h3>
+            <p class="institution" th:text="${form.institution}">Institution</p>
+            <p class="dates">
+                <span th:text="${form.startDate != null ? #dates.format(form.startDate, 'MMM yyyy') : ''}"></span>
+                <span> - </span>
+                <span th:text="${form.current ? 'Present' : (form.endDate != null ? #dates.format(form.endDate, 'MMM yyyy') : '')}"></span>
+            </p>
+            <p class="field" th:if="${form.fieldOfStudy}" th:text="${form.fieldOfStudy}">Field of Study</p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section" th:if="${portfolio.projects != null and !portfolio.projects.isEmpty()}">
+        <h2 class="section-title">Projects</h2>
+        <div th:each="proj : ${portfolio.projects}" class="item">
+            <h3 th:text="${proj.title}">Project Title</h3>
+            <p class="description" th:text="${proj.description}">Description</p>
+            <div th:if="${proj.skills != null and !proj.skills.isEmpty()}">
+                <strong>Skills:</strong>
+                <span th:each="skill, iterStat : ${proj.skills}" th:text="${skill + (iterStat.last ? '' : ', ')}">Skill</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Skills Section -->
+    <section class="section skills-list" th:if="${portfolio.techSkills != null and !portfolio.techSkills.isEmpty()}">
+        <h2 class="section-title">Technical Skills</h2>
+        <ul>
+            <li th:each="skill : ${portfolio.techSkills}">
+                <span th:text="${skill.name}">Skill Name</span>
+                (<span th:text="${skill.level}">Level</span>, <span th:text="${skill.yearsOfExperience + ' years'}">Experience</span>)
+            </li>
+        </ul>
+    </section>
+
+    <!-- Soft Skills Section -->
+    <section class="section skills-list" th:if="${portfolio.softSkills != null and !portfolio.softSkills.isEmpty()}">
+        <h2 class="section-title">Soft Skills</h2>
+        <ul>
+            <li th:each="skill : ${portfolio.softSkills}" th:text="${skill.name}">Soft Skill Name</li>
+        </ul>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="section" th:if="${portfolio.certifications != null and !portfolio.certifications.isEmpty()}">
+        <h2 class="section-title">Certifications</h2>
+        <div th:each="cert : ${portfolio.certifications}" class="item">
+            <h3 th:text="${cert.name}">Certification Name</h3>
+            <p th:text="${cert.issuingOrganization}">Issuing Organization</p>
+            <p class="dates" th:if="${cert.issueDate != null || cert.expiryDate != null}">
+                <span th:if="${cert.issueDate != null}">
+                    Issued: <span th:text="${#dates.format(cert.issueDate, 'MMM yyyy')}"></span>
+                </span>
+                <span th:if="${cert.expiryDate != null}">
+                    <span th:if="${cert.issueDate != null}">, </span>
+                    Expires: <span th:text="${#dates.format(cert.expiryDate, 'MMM yyyy')}"></span>
+                </span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Languages Section -->
+    <section class="section languages-list" th:if="${portfolio.languages != null and !portfolio.languages.isEmpty()}">
+        <h2 class="section-title">Languages</h2>
+        <ul>
+            <li th:each="lang : ${portfolio.languages}">
+                <span th:text="${lang.name}">Language</span> -
+                <span th:text="${lang.proficiency}">Proficiency</span>
+                <span th:if="${lang.nativeLanguage}">(Native)</span>
+            </li>
+        </ul>
+    </section>
+</div>
+</body>
+</html>
