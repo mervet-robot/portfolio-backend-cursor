@@ -24,12 +24,12 @@ public class RespFeedbackController {
 
     @GetMapping("/project/{projectId}")
     public ResponseEntity<List<RespFeedbackResponse>> getFeedbackByProjectId(@PathVariable Long projectId) {
-        return ResponseEntity.ok(feedbackService.getFeedbackByProjectId(projectId));
+        return ResponseEntity.ok(feedbackService.getAllFeedbackByRespProjectId(projectId));
     }
 
     @GetMapping("/reviewer/{reviewerId}")
     public ResponseEntity<List<RespFeedbackResponse>> getFeedbackByReviewerId(@PathVariable Long reviewerId) {
-        return ResponseEntity.ok(feedbackService.getFeedbackByReviewerId(reviewerId));
+        return ResponseEntity.ok(feedbackService.getAllFeedbackByReviewerId(reviewerId));
     }
 
     @PutMapping("/{feedbackId}")
@@ -44,4 +44,4 @@ public class RespFeedbackController {
         feedbackService.deleteFeedback(feedbackId);
         return ResponseEntity.noContent().build();
     }
-} 
+}

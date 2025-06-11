@@ -25,6 +25,7 @@ public class DirecteurService {
     @Autowired
     private PasswordEncoder encoder;
 
+//REGISTER DIRECTEUR
     public ResponseEntity<?> directeurRegister(DirecteurRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity
@@ -60,6 +61,8 @@ public class DirecteurService {
         return ResponseEntity.ok(new MessageResponse("Directeur registered successfully!"));
     }
 
+
+//REGISTER RESPONSABLE
     public ResponseEntity<?> createResponsable(ResponsableRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity
