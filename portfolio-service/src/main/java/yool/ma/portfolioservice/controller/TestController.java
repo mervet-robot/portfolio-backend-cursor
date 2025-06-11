@@ -32,10 +32,13 @@ public class TestController {
 
 
 
-//    @GetMapping("/apprenant")
-//    public String apprenantAccess() {
-//        return "Apprenant Content.";
-//    }
+    @GetMapping("/apprenant")
+    public List<User> getAllApprenant() {
+        return userRepository.findAll().stream()
+                .filter(user -> user.getRole() == Role.APPRENANT)
+                .collect(Collectors.toList());
+    }
+
 
 
 
