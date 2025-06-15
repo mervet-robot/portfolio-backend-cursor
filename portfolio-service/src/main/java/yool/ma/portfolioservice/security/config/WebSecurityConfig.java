@@ -84,6 +84,10 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/projects/**").permitAll()
                                 .requestMatchers("/api/projects/profile/**").permitAll()
                                 .requestMatchers("/api/projects/**").permitAll()
+
+                                .requestMatchers("/api/project-submits/**").permitAll()
+
+
                                 .requestMatchers("/api/feedback/project/**").permitAll()
                                 .requestMatchers("/api/feedback/reviewer/**").permitAll()
                                 .requestMatchers("/api/feedback/**").permitAll()
