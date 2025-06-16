@@ -61,15 +61,19 @@ public class ProjectSubmitService {
         projectSubmit.setStatus(status);
 
         ProjectSubmit updatedProject = projectSubmitRepository.save(projectSubmit);
+        Long newProjectId = null;
 
         if (status == ProjectSubmitStatus.VALIDATED) {
-            createProjectFromSubmission(updatedProject);
+            Project newProject = createProjectFromSubmission(updatedProject);
+            newProjectId = newProject.getId();
         }
 
-        return mapToResponse(updatedProject);
+        ProjectSubmitResponse response = mapToResponse(updatedProject);
+        response.setProjectId(newProjectId);
+        return response;
     }
 
-    private void createProjectFromSubmission(ProjectSubmit projectSubmit) {
+    private Project createProjectFromSubmission(ProjectSubmit projectSubmit) {
         Profile profile = profileRepository.findByUserId(projectSubmit.getApprenant().getId())
                 .orElseThrow(() -> new RuntimeException("Profile not found for user: " + projectSubmit.getApprenant().getId()));
 
@@ -95,18 +99,7 @@ public class ProjectSubmitService {
                 }).collect(Collectors.toSet());
         project.setMediaFiles(newMediaFiles);
 
-        // Copy feedback
-        Set<Feedback> newFeedbacks = projectSubmit.getFeedbacks().stream()
-                .map(submitFeedback -> {
-                    Feedback newFeedback = new Feedback();
-                    newFeedback.setProject(project);
-                    newFeedback.setReviewer(submitFeedback.getReviewer());
-                    newFeedback.setComment(submitFeedback.getComment());
-                    return newFeedback;
-                }).collect(Collectors.toSet());
-        project.setFeedbacks(newFeedbacks);
-
-        projectRepository.save(project);
+        return projectRepository.save(project);
     }
 
     private ProjectSubmitResponse mapToResponse(ProjectSubmit projectSubmit) {

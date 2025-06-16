@@ -16,4 +16,5 @@ public class ProjectSubmitResponse {
     private ProjectSubmitStatus status;
     private Set<String> skills;
     private Long apprenantId;
+    private Long projectId;
 } 
