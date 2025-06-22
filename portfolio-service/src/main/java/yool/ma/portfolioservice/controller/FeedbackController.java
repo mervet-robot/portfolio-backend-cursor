@@ -32,12 +32,6 @@ public class FeedbackController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/reviewer/{reviewerId}")
-    public ResponseEntity<List<FeedbackResponse>> getFeedbackByReviewerId(@PathVariable Long reviewerId) {
-        List<FeedbackResponse> responses = feedbackService.getAllFeedbackByReviewerId(reviewerId);
-        return ResponseEntity.ok(responses);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<FeedbackResponse> updateFeedback(
             @PathVariable Long id,

@@ -1,5 +1,6 @@
 package yool.ma.portfolioservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,12 +20,13 @@ public class Feedback {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @JoinColumn(name = "project_submit_id")
+    @JsonBackReference("submit-feedback")
+    private ProjectSubmit projectSubmit;
 
-    @ManyToOne
-    @JoinColumn(name = "reviewer_id")
-    private User reviewer;
+//    @ManyToOne
+//    @JoinColumn(name = "project_id")  // or whatever column name you want
+//    private Project project;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String comment;

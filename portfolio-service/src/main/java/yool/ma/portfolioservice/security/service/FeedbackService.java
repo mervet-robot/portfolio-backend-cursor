@@ -5,9 +5,11 @@ import yool.ma.portfolioservice.dto.FeedbackResponse;
 import yool.ma.portfolioservice.dto.MessageResponse;
 import yool.ma.portfolioservice.model.Feedback;
 import yool.ma.portfolioservice.model.Project;
+import yool.ma.portfolioservice.model.ProjectSubmit;
 import yool.ma.portfolioservice.model.User;
 import yool.ma.portfolioservice.repository.FeedbackRepository;
 import yool.ma.portfolioservice.repository.ProjectRepository;
+import yool.ma.portfolioservice.repository.ProjectSubmitRepository;
 import yool.ma.portfolioservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,21 +26,16 @@ public class FeedbackService {
 
 
     private final FeedbackRepository feedbackRepository;
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final ProjectSubmitRepository projectRepository;
 
     public FeedbackResponse createFeedback(FeedbackRequest request) {
-        Project project = projectRepository.findById(request.getProjectId())
+        ProjectSubmit project = projectRepository.findById(request.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + request.getProjectId()));
 
 //        validationService.validateScores(request.getTechnicalScore(), request.getAttitudeScore());
 
-        User reviewer = userRepository.findById(request.getReviewerId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.getReviewerId()));
-
         Feedback feedback = new Feedback();
-        feedback.setProject(project);
-        feedback.setReviewer(reviewer);
+        feedback.setProjectSubmit(project);
         feedback.setComment(request.getComment());
         feedback.setTechnicalScore(request.getTechnicalScore());
         feedback.setAttitudeScore(request.getAttitudeScore());
@@ -48,14 +45,7 @@ public class FeedbackService {
     }
 
     public List<FeedbackResponse> getAllFeedbackByProjectId(Long projectId) {
-        return feedbackRepository.findByProjectId(projectId)
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-    public List<FeedbackResponse> getAllFeedbackByReviewerId(Long reviewerId) {
-        return feedbackRepository.findByReviewerId(reviewerId)
+        return feedbackRepository.findByProjectSubmitId(projectId)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -93,8 +83,7 @@ public class FeedbackService {
     private FeedbackResponse mapToResponse(Feedback feedback) {
         FeedbackResponse response = new FeedbackResponse();
         response.setId(feedback.getId());
-        response.setProjectId(feedback.getProject().getId());
-        response.setReviewerId(feedback.getReviewer().getId());
+        response.setProjectId(feedback.getProjectSubmit().getId());
         response.setComment(feedback.getComment());
         response.setTechnicalScore(feedback.getTechnicalScore());
         response.setAttitudeScore(feedback.getAttitudeScore());

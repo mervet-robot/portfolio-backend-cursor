@@ -1,6 +1,7 @@
 package yool.ma.portfolioservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
-    @JsonBackReference
+    @JsonBackReference("profile-projects")
     private Profile profile;
 
     @Column(nullable = false)
@@ -49,6 +50,7 @@ public class Project {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<ProjectMedia> mediaFiles = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Feedback> feedbacks = new HashSet<>();
+//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference
+//    private Set<Feedback> feedbacks = new HashSet<>();
 }

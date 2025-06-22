@@ -22,10 +22,16 @@ public class ProjectSubmit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @ManyToOne
-    @JoinColumn(name = "apprenant_id", nullable = false)
-    @JsonBackReference
-    private User apprenant;
+    @JoinColumn(name = "profile_id")
+    @JsonBackReference("profile-submits")
+    private Profile profile;
+
+//    @ManyToOne
+//    @JoinColumn(name = "apprenant_id", nullable = false)
+//    @JsonBackReference
+//    private User apprenant;
 
     @Column(nullable = false)
     private String title;
@@ -48,5 +54,5 @@ public class ProjectSubmit {
     private Set<ProjectSubmitMedia> mediaFiles = new HashSet<>();
 
     @OneToMany(mappedBy = "projectSubmit", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectSubmitFeedback> feedbacks = new HashSet<>();
+    private Set<Feedback> feedbacks = new HashSet<>();
 } 

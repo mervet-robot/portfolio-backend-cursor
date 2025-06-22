@@ -20,7 +20,7 @@ public class Formation {
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
-//    @JsonBackReference
+    @JsonBackReference
     private Profile profile;
 
     @Column(nullable = false)

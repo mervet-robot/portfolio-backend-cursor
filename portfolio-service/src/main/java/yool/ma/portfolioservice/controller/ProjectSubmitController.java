@@ -1,6 +1,7 @@
 package yool.ma.portfolioservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectSubmitController {
 
+    @Autowired
     private final ProjectSubmitService projectSubmitService;
 
-    @PostMapping("/apprenant/{apprenantId}")
+    @PostMapping("/apprenant/{profileId}")
     public ResponseEntity<ProjectSubmitResponse> submitProject(
-            @PathVariable Long apprenantId,
+            @PathVariable Long profileId,
             @RequestBody ProjectSubmitRequest request) {
-        ProjectSubmitResponse response = projectSubmitService.submitProject(apprenantId, request);
+        ProjectSubmitResponse response = projectSubmitService.submitProject(profileId, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

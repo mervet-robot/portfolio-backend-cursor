@@ -56,6 +56,9 @@ public class Profile {
     @JsonManagedReference
     private List<Project> projects = new ArrayList<>();
 
+
+
+
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Certification> certifications = new ArrayList<>();

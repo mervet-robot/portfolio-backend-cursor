@@ -1,5 +1,6 @@
 package yool.ma.portfolioservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class Language {
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
-//    @JsonBackReference
+    @JsonBackReference
     private Profile profile;
 
     @Column(nullable = false)

@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ProjectSubmitRepository extends JpaRepository<ProjectSubmit, Long> {
 
-    List<ProjectSubmit> findByApprenantId(Long apprenantId);
+    List<ProjectSubmit> findByProfileId(Long profileId);
 
     List<ProjectSubmit> findByStatus(ProjectSubmitStatus status);
 
-    List<ProjectSubmit> findByApprenantIdAndStatus(Long apprenantId, ProjectSubmitStatus status);
+    List<ProjectSubmit> findByProfileIdAndStatus(Long profileId, ProjectSubmitStatus status);
 } 

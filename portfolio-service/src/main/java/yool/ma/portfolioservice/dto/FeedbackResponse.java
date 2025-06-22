@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 public class FeedbackResponse {
     private Long id;
     private Long projectId;
-    private Long reviewerId;
     private String comment;
     private Integer technicalScore;
     private Integer attitudeScore;

@@ -23,18 +23,19 @@ import java.util.stream.Collectors;
 public class ProjectSubmitService {
 
     private final ProjectSubmitRepository projectSubmitRepository;
+
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final ProfileRepository profileRepository;
 
     @Transactional
-    public ProjectSubmitResponse submitProject(Long apprenantId, ProjectSubmitRequest request) {
-        User apprenant = userRepository.findById(apprenantId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + apprenantId));
+    public ProjectSubmitResponse submitProject(Long profileId, ProjectSubmitRequest request) {
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new RuntimeException("Profile not found with id: " + profileId));
 
         ProjectSubmit projectSubmit = new ProjectSubmit();
         mapRequestToProjectSubmit(request, projectSubmit);
-        projectSubmit.setApprenant(apprenant);
+        projectSubmit.setProfile(profile);
         projectSubmit.setStatus(ProjectSubmitStatus.SUBMITTED); // Default status
 
         ProjectSubmit savedProjectSubmit = projectSubmitRepository.save(projectSubmit);
@@ -74,8 +75,8 @@ public class ProjectSubmitService {
     }
 
     private Project createProjectFromSubmission(ProjectSubmit projectSubmit) {
-        Profile profile = profileRepository.findByUserId(projectSubmit.getApprenant().getId())
-                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + projectSubmit.getApprenant().getId()));
+        Profile profile = profileRepository.findByUserId(projectSubmit.getProfile().getId())
+                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + projectSubmit.getProfile().getId()));
 
         Project project = new Project();
         project.setProfile(profile);
@@ -111,8 +112,8 @@ public class ProjectSubmitService {
         response.setEndDate(projectSubmit.getEndDate());
         response.setStatus(projectSubmit.getStatus());
         response.setSkills(projectSubmit.getSkills());
-        if (projectSubmit.getApprenant() != null) {
-            response.setApprenantId(projectSubmit.getApprenant().getId());
+        if (projectSubmit.getProfile() != null) {
+            response.setProfileId(projectSubmit.getProfile().getId());
         }
         return response;
     }
