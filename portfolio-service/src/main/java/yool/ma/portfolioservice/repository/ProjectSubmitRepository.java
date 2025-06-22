@@ -13,4 +13,6 @@ public interface ProjectSubmitRepository extends JpaRepository<ProjectSubmit, Lo
     List<ProjectSubmit> findByStatus(ProjectSubmitStatus status);
 
     List<ProjectSubmit> findByProfileIdAndStatus(Long profileId, ProjectSubmitStatus status);
+
+    List<ProjectSubmit> findByStatusNot(ProjectSubmitStatus status);
 } 

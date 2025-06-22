@@ -42,4 +42,22 @@ public class ProjectSubmitController {
         ProjectSubmitResponse response = projectSubmitService.reviewProject(projectId, reviewRequest.getStatus());
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/profile/{profileId}")
+    public ResponseEntity<List<ProjectSubmitResponse>> getSubmittedProjectsByProfileId(@PathVariable Long profileId) {
+        List<ProjectSubmitResponse> responses = projectSubmitService.getSubmittedProjectsByProfileId(profileId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/validated")
+    public ResponseEntity<List<ProjectSubmitResponse>> getValidatedProjects() {
+        List<ProjectSubmitResponse> responses = projectSubmitService.getValidatedProjects();
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/reviewed")
+    public ResponseEntity<List<ProjectSubmitResponse>> getReviewedProjects() {
+        List<ProjectSubmitResponse> responses = projectSubmitService.getReviewedProjects();
+        return ResponseEntity.ok(responses);
+    }
 } 

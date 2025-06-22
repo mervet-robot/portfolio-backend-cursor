@@ -51,6 +51,30 @@ public class ProjectSubmitService {
     }
 
     @Transactional
+    public List<ProjectSubmitResponse> getSubmittedProjectsByProfileId(Long profileId) {
+        return projectSubmitRepository.findByProfileId(profileId)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProjectSubmitResponse> getValidatedProjects() {
+        return projectSubmitRepository.findByStatus(ProjectSubmitStatus.VALIDATED)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProjectSubmitResponse> getReviewedProjects() {
+        return projectSubmitRepository.findByStatusNot(ProjectSubmitStatus.SUBMITTED)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public ProjectSubmitResponse reviewProject(Long projectId, ProjectSubmitStatus status) {
         if (status != ProjectSubmitStatus.VALIDATED && status != ProjectSubmitStatus.REJECTED) {
             throw new IllegalArgumentException("Status must be VALIDATED or REJECTED");
