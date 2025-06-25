@@ -96,6 +96,14 @@ public class UserMediaService {
     }
 
     /**
+     * Get a single media item by its ID.
+     */
+    public UserMedia getUserMediaById(Long mediaId) {
+        return userMediaRepository.findById(mediaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Media not found with id: " + mediaId));
+    }
+
+    /**
      * Get media by project and media type
      */
     public List<UserMedia> getProjectMediaByType(Long profileId, MediaType mediaType) {

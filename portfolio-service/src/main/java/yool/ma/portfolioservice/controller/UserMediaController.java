@@ -56,10 +56,7 @@ public class UserMediaController {
 
     @GetMapping("/download/{mediaId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long mediaId) {
-        UserMedia media = userMediaService.getProjectMediaByProject(mediaId).stream()
-                .filter(m -> m.getId().equals(mediaId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Media not found"));
+        UserMedia media = userMediaService.getUserMediaById(mediaId);
 
         byte[] fileContent = userMediaService.getProjectMediaContent(mediaId);
 
