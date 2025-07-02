@@ -34,8 +34,8 @@ public class User {
 
     private boolean active = true;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
-    @JsonIgnore
+//    @JsonIgnore
     private Profile profile;
 }

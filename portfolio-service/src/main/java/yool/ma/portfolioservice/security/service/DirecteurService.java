@@ -25,7 +25,6 @@ public class DirecteurService {
     @Autowired
     private PasswordEncoder encoder;
 
-//REGISTER DIRECTEUR
     public ResponseEntity<?> directeurRegister(DirecteurRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity
@@ -51,9 +50,11 @@ public class DirecteurService {
         profile.setLastName(request.getLastName());
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
+
         profile.setSexe(request.getSexe());
         profile.setAddress(request.getAddress());
         profile.setCentre(request.getCentre());
+
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -61,8 +62,6 @@ public class DirecteurService {
         return ResponseEntity.ok(new MessageResponse("Directeur registered successfully!"));
     }
 
-
-//REGISTER RESPONSABLE
     public ResponseEntity<?> createResponsable(ResponsableRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity
@@ -92,6 +91,7 @@ public class DirecteurService {
         profile.setSexe(request.getSexe());
         profile.setAddress(request.getAddress());
         profile.setCentre(request.getCentre());
+
         profile.setUser(user);
         user.setProfile(profile);
 
@@ -108,18 +108,18 @@ public class DirecteurService {
     public User getResponsableById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Responsable not found with id: " + id));
-        
+
         if (user.getRole() != Role.RESPONSABLE) {
             throw new RuntimeException("User with id " + id + " is not a Responsable");
         }
-        
+
         return user;
     }
 
     public ResponseEntity<?> updateResponsable(Long id, ResponsableRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Responsable not found with id: " + id));
-        
+
         if (user.getRole() != Role.RESPONSABLE) {
             return ResponseEntity
                     .badRequest()
@@ -127,7 +127,7 @@ public class DirecteurService {
         }
 
         // Check if username is taken by someone else
-        if (!user.getUsername().equals(request.getUsername()) && 
+        if (!user.getUsername().equals(request.getUsername()) &&
                 userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity
                     .badRequest()
@@ -135,7 +135,7 @@ public class DirecteurService {
         }
 
         // Check if email is taken by someone else
-        if (!user.getEmail().equals(request.getEmail()) && 
+        if (!user.getEmail().equals(request.getEmail()) &&
                 userRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -145,7 +145,7 @@ public class DirecteurService {
         // Update user information
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        
+
         // Only update password if provided
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
             user.setPassword(encoder.encode(request.getPassword()));
@@ -158,9 +158,6 @@ public class DirecteurService {
         profile.setEmail(request.getEmail());
         profile.setPhoneNumber(request.getPhoneNumber());
         profile.setDepartment(request.getDepartment());
-        profile.setSexe(request.getSexe());
-        profile.setAddress(request.getAddress());
-        profile.setCentre(request.getCentre());
 
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("Responsable updated successfully!"));
@@ -169,13 +166,13 @@ public class DirecteurService {
     public ResponseEntity<?> deleteResponsable(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Responsable not found with id: " + id));
-        
+
         if (user.getRole() != Role.RESPONSABLE) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: User with id " + id + " is not a Responsable"));
         }
-        
+
         userRepository.delete(user);
         return ResponseEntity.ok(new MessageResponse("Responsable deleted successfully!"));
     }
