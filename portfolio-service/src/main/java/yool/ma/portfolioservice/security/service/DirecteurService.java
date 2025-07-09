@@ -159,6 +159,10 @@ public class DirecteurService {
         profile.setPhoneNumber(request.getPhoneNumber());
         profile.setDepartment(request.getDepartment());
 
+        profile.setSexe(request.getSexe());
+        profile.setAddress(request.getAddress());
+        profile.setCentre(request.getCentre());
+
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("Responsable updated successfully!"));
     }

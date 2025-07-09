@@ -78,6 +78,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/resp-projects/**").permitAll()
                                 .requestMatchers("/api/resp-feedback/**").permitAll()
 
+                                .requestMatchers("/api/certif-media/**").permitAll()
+
 
                                 .requestMatchers("/api/certifications/**").permitAll()
                                 .requestMatchers("/api/certifications/profile/**").permitAll()
