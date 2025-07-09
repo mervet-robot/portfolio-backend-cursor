@@ -109,4 +109,10 @@ public class CertifMediaController {
         List<CertifMedia> mediaList = certifMediaService.searchCertifMediaByTitle(username, title);
         return ResponseEntity.ok(mediaList);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CertifMedia>> getAllCertifMedia() {
+        List<CertifMedia> mediaList = certifMediaService.getAllCertifMedia();
+        return ResponseEntity.ok(mediaList);
+    }
 } 

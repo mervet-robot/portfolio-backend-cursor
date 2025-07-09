@@ -170,4 +170,11 @@ public class CertifMediaService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
         return certifMediaRepository.findByUserAndTitreContainingIgnoreCase(user, title);
     }
+
+    /**
+     * Get all certification media
+     */
+    public List<CertifMedia> getAllCertifMedia() {
+        return certifMediaRepository.findAll();
+    }
 } 
