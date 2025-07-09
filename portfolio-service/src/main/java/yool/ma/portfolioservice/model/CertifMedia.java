@@ -38,6 +38,19 @@ public class CertifMedia {
 
     private LocalDateTime uploadDate;
 
+    // Transient field for userId to be included in JSON response
+    @Transient
+    private Long userId;
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    private void setUserIdFromUser() {
+        if (this.user != null) {
+            this.userId = this.user.getId();
+        }
+    }
+
     @PrePersist
     protected void onCreate() {
         uploadDate = LocalDateTime.now();

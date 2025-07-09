@@ -9,6 +9,7 @@ import yool.ma.portfolioservice.dto.CertificationResponse;
 import yool.ma.portfolioservice.security.service.CertificationService;
 
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -51,5 +52,13 @@ public class CertificationController {
     public ResponseEntity<Void> deleteCertification(@PathVariable Long id) {
         certificationService.deleteCertification(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/from-media/user/{userId}/media/{certifMediaId}")
+    public ResponseEntity<CertificationResponse> createCertificationFromMedia(
+            @PathVariable Long userId,
+            @PathVariable Long certifMediaId) {
+        CertificationResponse response = certificationService.createCertificationFromMedia(userId, certifMediaId);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

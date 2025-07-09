@@ -15,4 +15,5 @@ public class CertificationResponse {
     private String validationLink;
     private String category;
     private boolean manuallyAdded;
+    private Long certifMediaId;
 }

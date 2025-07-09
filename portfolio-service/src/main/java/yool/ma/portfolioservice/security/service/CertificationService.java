@@ -9,7 +9,12 @@ import yool.ma.portfolioservice.model.Profile;
 import yool.ma.portfolioservice.repository.CertificationRepository;
 import yool.ma.portfolioservice.repository.ProfileRepository;
 import org.springframework.transaction.annotation.Transactional;
+import yool.ma.portfolioservice.repository.CertifMediaRepository;
+import yool.ma.portfolioservice.repository.UserRepository;
+import yool.ma.portfolioservice.model.CertifMedia;
+import yool.ma.portfolioservice.model.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +24,8 @@ public class CertificationService {
 
     private final CertificationRepository certificationRepository;
     private final ProfileRepository profileRepository;
+    private final CertifMediaRepository certifMediaRepository;
+    private final UserRepository userRepository;
 
     // Create
     public CertificationResponse createCertification(Long profileId, CertificationRequest request) {
@@ -28,6 +35,41 @@ public class CertificationService {
         Certification certification = new Certification();
         mapRequestToCertification(request, certification);
         certification.setProfile(profile);
+
+        Certification savedCertification = certificationRepository.save(certification);
+        return mapToResponse(savedCertification);
+    }
+
+    // Create Certification from CertifMedia
+    @Transactional
+    public CertificationResponse createCertificationFromMedia(Long userId, Long certifMediaId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        CertifMedia certifMedia = certifMediaRepository.findById(certifMediaId)
+                .orElseThrow(() -> new RuntimeException("CertifMedia not found with id: " + certifMediaId));
+
+        if (user.getProfile() == null) {
+            throw new RuntimeException("User does not have a profile yet.");
+        }
+
+        // Check if a certification for this media already exists to prevent duplicates
+        // This assumes a CertifMedia can only correspond to one Certification entry in a profile.
+        // You might need a more robust check or a field in Certification linking to CertifMedia if that's the case.
+        // For now, let's assume one-to-one or allow duplicates and rely on frontend to prevent.
+
+        Certification certification = new Certification();
+        certification.setProfile(user.getProfile());
+        certification.setName(certifMedia.getTitre());
+        certification.setDescription(certifMedia.getDescription());
+        certification.setIssuingOrganization(certifMedia.getCategory()); // Using category as organization
+        certification.setIssueDate(certifMedia.getUploadDate() != null ? certifMedia.getUploadDate().toLocalDate() : LocalDate.now());
+        certification.setExpiryDate(null); // No expiry date from CertifMedia
+        certification.setCertificateUrl(certifMedia.getFilePath());
+        certification.setValidationLink(certifMedia.isVerified() ? "Verified by system" : "Not verified");
+        certification.setCategory(certifMedia.getCategory());
+        certification.setManuallyAdded(false); // Indicates it's created from media
+        certification.setCertifMediaId(certifMediaId);
 
         Certification savedCertification = certificationRepository.save(certification);
         return mapToResponse(savedCertification);
@@ -80,6 +122,7 @@ public class CertificationService {
         response.setValidationLink(certification.getValidationLink());
         response.setCategory(certification.getCategory());
         response.setManuallyAdded(certification.isManuallyAdded());
+        response.setCertifMediaId(certification.getCertifMediaId());
         return response;
     }
 

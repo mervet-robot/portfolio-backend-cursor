@@ -40,4 +40,7 @@ public class Certification {
     private String category;
 
     private boolean manuallyAdded;
+
+    @Column(nullable = true)
+    private Long certifMediaId;
 }
